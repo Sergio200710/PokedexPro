@@ -132,7 +132,12 @@ function App() {
               onChange={(e) => setSearchNombre(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
             />
-            <select value={filterTipo} onChange={(e) => { setFilterTipo(e.target.value); }}>
+            <select value={filterTipo} onChange={(e) => { 
+              const newTipo = e.target.value;
+              setFilterTipo(newTipo); 
+              setPage(0);
+              fetchPokemons(0, newTipo, searchNombre);
+            }}>
               <option value="">Cualquier tipo</option>
               {tiposUnicos.map((tipo) => (
                 <option key={tipo} value={tipo}>{tipo}</option>
