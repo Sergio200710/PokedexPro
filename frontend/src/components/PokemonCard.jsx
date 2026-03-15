@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 // Colores base para los badges de los tipos (ampliado con todos los tipos)
 const TYPE_COLORS = {
@@ -22,22 +22,69 @@ const TYPE_COLORS = {
   Volador: 'linear-gradient(135deg, #a5b4fc, #6366f1)',
 };
 
-const PokemonCard = ({ pokemon, onToggleFavorite }) => {
+const PokemonCard = ({ pokemon, onToggleFavorite, onClick }) => {
   const [showSparkles, setShowSparkles] = useState(false);
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glX: 50, glY: 50, hover: false });
+  const cardRef = useRef(null);
 
-  const handleFavoriteClick = async () => {
+  const handleFavoriteClick = async (e) => {
+    e.stopPropagation();
     if (!pokemon.is_favorite) {
       setShowSparkles(true);
-      setTimeout(() => setShowSparkles(false), 600);
+      setTimeout(() => setShowSparkles(false), 800);
     }
     await onToggleFavorite(pokemon.id, !pokemon.is_favorite);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left; 
+    const y = e.clientY - rect.top;  
+    
+    // Calcular rotación 3D extrema
+    const rotateY = ((x / rect.width) - 0.5) * 40; 
+    const rotateX = ((y / rect.height) - 0.5) * -40;
+    
+    const glX = (x / rect.width) * 100;
+    const glY = (y / rect.height) * 100;
+
+    setTilt({ x: rotateX, y: rotateY, glX, glY, hover: true });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0, glX: 50, glY: 50, hover: false });
   };
 
   const bgStyle = TYPE_COLORS[pokemon.tipo_principal] || TYPE_COLORS['Normal'];
   const bgStyle2 = pokemon.tipo_secundario ? (TYPE_COLORS[pokemon.tipo_secundario] || TYPE_COLORS['Normal']) : null;
 
+  const tiltStyle = {
+    transform: tilt.hover 
+      ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(1.08, 1.08, 1.08)` 
+      : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+    transition: tilt.hover ? 'none' : 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
+    cursor: onClick ? 'pointer' : 'default',
+    zIndex: tilt.hover ? 20 : 1
+  };
+
   return (
-    <div className="pokemon-card">
+    <div 
+      className="pokemon-card" 
+      onClick={() => onClick && onClick(pokemon)} 
+      style={tiltStyle}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      ref={cardRef}
+    >
+      {tilt.hover && (
+        <div 
+          className="card-holo-glare" 
+          style={{ 
+            background: `radial-gradient(circle at ${tilt.glX}% ${tilt.glY}%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 60%)` 
+          }}
+        />
+      )}
       <div className="card-glow" />
       
       <div className="card-id">#{pokemon.id}</div>

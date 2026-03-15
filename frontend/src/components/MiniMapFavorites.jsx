@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MiniMapFavorites = ({ favorites }) => {
+const MiniMapFavorites = ({ favorites, onClick }) => {
   return (
     <div className="mini-map-container">
       <div className="mini-map-bg"></div>
@@ -24,6 +24,7 @@ const MiniMapFavorites = ({ favorites }) => {
               className="floating-pokemon-wrapper"
               style={{ top: topPosition, left: leftPosition, animationDelay: floatDelay }}
               title={fav.nombre}
+              onClick={() => onClick && onClick(fav)}
             >
               {/* Priorizar sprite animado, o fallback al artwork oficial de la lista principal */}
               <img 

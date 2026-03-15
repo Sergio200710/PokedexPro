@@ -8,6 +8,7 @@ import Leaderboard from './components/Leaderboard';
 import PokemonSelector from './components/PokemonSelector';
 import MultiPlayerArena from './components/MultiPlayerArena';
 import SyncPanel from './components/SyncPanel';
+import PokemonDetailsModal from './components/PokemonDetailsModal';
 import './App.css';
 
 const TABS = [
@@ -31,6 +32,7 @@ function App() {
   const [filterTipo, setFilterTipo] = useState('');
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const PAGE_SIZE = 60;
 
   // Battle state
@@ -121,7 +123,7 @@ function App() {
       {activeTab === 'pokedex' && (
         <div className="tab-content">
           {!loading && !error && favoritosEnEquipo.length > 0 && (
-            <MiniMapFavorites favorites={favoritosEnEquipo} />
+            <MiniMapFavorites favorites={favoritosEnEquipo} onClick={setSelectedPokemon} />
           )}
 
           <div className="filters">
@@ -169,6 +171,7 @@ function App() {
                       key={pokemon.id}
                       pokemon={pokemon}
                       onToggleFavorite={toggleFavorite}
+                      onClick={setSelectedPokemon}
                     />
                   ))
                 ) : (
@@ -196,6 +199,14 @@ function App() {
                     Siguiente ▶
                   </button>
                 </div>
+              )}
+
+              {selectedPokemon && (
+                <PokemonDetailsModal
+                  pokemon={selectedPokemon}
+                  onClose={() => setSelectedPokemon(null)}
+                  onToggleFavorite={toggleFavorite}
+                />
               )}
             </>
           )}
