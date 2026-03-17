@@ -68,15 +68,18 @@ const PokemonCard = ({ pokemon, onToggleFavorite, onClick }) => {
     zIndex: tilt.hover ? 20 : 1
   };
 
+  const isShiny = (pokemon.hp || 50) + pokemon.ataque + pokemon.defensa + pokemon.velocidad > 250;
+
   return (
     <div 
-      className="pokemon-card" 
+      className={`pokemon-card ${isShiny ? 'shiny' : ''}`}
       onClick={() => onClick && onClick(pokemon)} 
       style={tiltStyle}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       ref={cardRef}
     >
+      {isShiny && <div className="shiny-stars">✨ SHINY ✨</div>}
       {tilt.hover && (
         <div 
           className="card-holo-glare" 

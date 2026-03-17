@@ -6,21 +6,36 @@ const SyncPanel = () => {
   const [done, setDone] = useState(false);
   const logRef = useRef(null);
 
+  const [progress, setProgress] = useState(0);
+
   const startSync = () => {
     setSyncing(true);
     setMessages([]);
     setDone(false);
+    setProgress(0);
 
     const es = new EventSource('http://localhost:4412/api/sync-pokemon');
 
     es.onmessage = (e) => {
       const data = JSON.parse(e.data);
       setMessages((prev) => [...prev, data.message || '...']);
+      
+      // Parsear progreso de mensajes tipo "⚡ 50/1000 Pokémon sincronizados..."
+      if (data.message && data.message.includes('/')) {
+        const parts = data.message.match(/(\d+)\/(\d+)/);
+        if (parts) {
+          const current = parseInt(parts[1]);
+          const total = parseInt(parts[2]);
+          setProgress(Math.round((current / total) * 100));
+        }
+      }
+
       if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
 
       if (data.done) {
         setSyncing(false);
         setDone(true);
+        setProgress(100);
         es.close();
       }
     };
@@ -49,7 +64,10 @@ const SyncPanel = () => {
       {syncing && (
         <div className="sync-progress">
           <div className="spinner" />
-          <span>Sincronizando... Por favor espera</span>
+          <span>Sincronizando... {progress}%</span>
+          <div className="sync-bar-container">
+            <div className="sync-bar-fill" style={{ width: `${progress}%` }}></div>
+          </div>
         </div>
       )}
 

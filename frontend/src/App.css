@@ -513,6 +513,44 @@ h1.main-title::after {
 
 .pokemon-card:hover .card-glow { opacity: 0.15; }
 
+/* SHINY POKEMON EFFECTS */
+.pokemon-card.shiny::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #facc15, #f59e0b, #facc15);
+  z-index: -1;
+  border-radius: 22px;
+  animation: shinyBorder 2s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes shinyBorder {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+.pokemon-card.shiny {
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+}
+
+.shiny-stars {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #facc15;
+  font-size: 1.2rem;
+  z-index: 5;
+  text-shadow: 0 0 10px #facc15;
+  animation: shinyPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes shinyPulse {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+  50% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+}
+
 .pokemon-image-container {
   width: 140px; height: 140px;
   margin: 0 auto 1rem;
@@ -1406,11 +1444,28 @@ h1.main-title::after {
 
 .sync-progress {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sync-bar-container {
+  width: 100%;
+  height: 12px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-top: 0.5rem;
+}
+
+.sync-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #a855f7);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
 }
 
 .sync-done {
