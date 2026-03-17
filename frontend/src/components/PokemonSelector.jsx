@@ -52,6 +52,8 @@ const PokemonSelector = ({ label, selected, onSelect, excludeId }) => {
               <span>❤️ {selected.hp}</span>
               <span>⚔️ {selected.ataque}</span>
               <span>🛡️ {selected.defensa}</span>
+              <span>✨ {selected.especial_ataque}</span>
+              <span>🔰 {selected.especial_defensa}</span>
               <span>💨 {selected.velocidad}</span>
             </div>
           </div>

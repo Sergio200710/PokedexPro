@@ -331,6 +331,8 @@
 .stat-hp { background: linear-gradient(90deg, #ef4444, #f87171); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
 .stat-atk { background: linear-gradient(90deg, #f97316, #fb923c); box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
 .stat-def { background: linear-gradient(90deg, #3b82f6, #60a5fa); box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+.stat-spa { background: linear-gradient(90deg, #a855f7, #c084fc); box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+.stat-spd-def { background: linear-gradient(90deg, #eab308, #facc15); box-shadow: 0 0 10px rgba(234, 179, 8, 0.5); }
 .stat-spd { background: linear-gradient(90deg, #10b981, #34d399); box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
 
 .stat-total {

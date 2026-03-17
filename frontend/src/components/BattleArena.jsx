@@ -54,8 +54,11 @@ const PokemonFighter = ({ pokemon, hp, hpMax, isShaking, isWinner, side }) => {
       </div>
       <HealthBar current={hp} max={hpMax} />
       <div className="fighter-stats-mini">
+        <span>❤️ {hp || '50'}</span>
         <span>⚔️ {pokemon.ataque}</span>
         <span>🛡️ {pokemon.defensa}</span>
+        <span>✨ {pokemon.especial_ataque}</span>
+        <span>🔰 {pokemon.especial_defensa}</span>
         <span>💨 {pokemon.velocidad}</span>
       </div>
     </div>

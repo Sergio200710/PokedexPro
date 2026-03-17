@@ -33,7 +33,7 @@ const PokemonDetailsModal = ({ pokemon, onClose, onToggleFavorite }) => {
     window.speechSynthesis.cancel();
     
     const textToSpeak = `${pokemon.nombre}. Pokémon de tipo ${pokemon.tipo_principal} ${pokemon.tipo_secundario ? 'y ' + pokemon.tipo_secundario : ''}. 
-      Estadísticas de combate: Vida ${pokemon.hp || 50}, Ataque ${pokemon.ataque}, Defensa ${pokemon.defensa}, Velocidad ${pokemon.velocidad}.`;
+      Estadísticas de combate: Vida ${pokemon.hp || 50}, Ataque ${pokemon.ataque}, Defensa ${pokemon.defensa}, Ataque Especial ${pokemon.especial_ataque}, Defensa Especial ${pokemon.especial_defensa}, Velocidad ${pokemon.velocidad}.`;
       
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = 'es-ES';
@@ -82,8 +82,11 @@ const PokemonDetailsModal = ({ pokemon, onClose, onToggleFavorite }) => {
   const hpPercent = Math.min(((pokemon.hp || 50) / maxStat) * 100, 100);
   const atkPercent = Math.min((pokemon.ataque / maxStat) * 100, 100);
   const defPercent = Math.min((pokemon.defensa / maxStat) * 100, 100);
+  const spaPercent = Math.min((pokemon.especial_ataque / maxStat) * 100, 100);
+  const spdDefPercent = Math.min((pokemon.especial_defensa / maxStat) * 100, 100);
   const spdPercent = Math.min((pokemon.velocidad / maxStat) * 100, 100);
-  const totalStats = (pokemon.hp || 50) + pokemon.ataque + pokemon.defensa + pokemon.velocidad;
+  const totalStats = (pokemon.hp || 50) + (pokemon.ataque || 0) + (pokemon.defensa || 0) + 
+                     (pokemon.especial_ataque || 0) + (pokemon.especial_defensa || 0) + (pokemon.velocidad || 0);
 
   return (
     <div className="modal-backdrop" onClick={handleBackdropClick}>
@@ -164,8 +167,24 @@ const PokemonDetailsModal = ({ pokemon, onClose, onToggleFavorite }) => {
             </div>
 
             <div className="stat-row">
+              <span className="stat-label">Esp. Atk</span>
+              <span className="stat-val">{pokemon.especial_ataque || '50'}</span>
+              <div className="stat-bar-bg">
+                <div className="stat-bar-fill stat-spa" style={{ width: `${spaPercent}%` }}></div>
+              </div>
+            </div>
+
+            <div className="stat-row">
+              <span className="stat-label">Esp. Def</span>
+              <span className="stat-val">{pokemon.especial_defensa || '50'}</span>
+              <div className="stat-bar-bg">
+                <div className="stat-bar-fill stat-spd-def" style={{ width: `${spdDefPercent}%` }}></div>
+              </div>
+            </div>
+
+            <div className="stat-row">
               <span className="stat-label">Velocidad</span>
-              <span className="stat-val">{pokemon.velocidad}</span>
+              <span className="stat-val">{pokemon.velocidad || '50'}</span>
               <div className="stat-bar-bg">
                 <div className="stat-bar-fill stat-spd" style={{ width: `${spdPercent}%` }}></div>
               </div>
