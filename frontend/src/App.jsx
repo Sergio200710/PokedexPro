@@ -33,6 +33,7 @@ function App() {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [tipoList, setTipoList] = useState([]);
   const PAGE_SIZE = 60;
 
   // Battle state
@@ -72,6 +73,11 @@ function App() {
 
   useEffect(() => {
     fetchPokemons(0);
+    // Fetch all unique types for the filter
+    fetch(`http://localhost:4412/api/types`)
+      .then(r => r.json())
+      .then(data => setTipoList(data))
+      .catch(console.error);
   }, []);
 
   const handleSearch = () => {
@@ -141,7 +147,7 @@ function App() {
               fetchPokemons(0, newTipo, searchNombre);
             }}>
               <option value="">Cualquier tipo</option>
-              {tiposUnicos.map((tipo) => (
+              {tipoList.map((tipo) => (
                 <option key={tipo} value={tipo}>{tipo}</option>
               ))}
             </select>

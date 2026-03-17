@@ -225,6 +225,18 @@ app.get('/api/auth/status', (req, res) => {
   res.json(req.isAuthenticated() ? { authenticated: true, user: req.user } : { authenticated: false });
 });
 
+app.get('/api/types', async (req, res) => {
+  const db = getDb();
+  try {
+    const [rows] = await runQuery(db, 'SELECT DISTINCT tipo_principal FROM pokemon WHERE tipo_principal IS NOT NULL ORDER BY tipo_principal');
+    res.json(rows.map(r => r.tipo_principal));
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener tipos' });
+  } finally {
+    db.close();
+  }
+});
+
 app.get('/api/pokemons', async (req, res) => {
   const db = getDb();
   try {
