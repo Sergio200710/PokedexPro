@@ -1,95 +1,63 @@
-# PokéDex Pro
+# ⚡ Pokédex App
 
-Aplicación de biblioteca de Pokémon desarrollada con **React** (Front-end) y **Node.js + SQLite** (Back-end), cumpliendo todos los requisitos solicitados.
+<div align="center">
+  <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" width="150" alt="Pikachu">
+</div>
 
-## Requisitos cumplidos
-- ✅ Base de datos con información de todos los pokemons (SQLite).
-- ✅ Extraer imagen desde API externa (PokeAPI).
-- ✅ Listado filtrable.
-- ✅ Uso de React para el Frontend (estilizado con Glassmorphism moderno).
-- ✅ Uso de Node.js en el Backend.
+Proyecto final para el curso de 1º de DAM. Consiste en una aplicación Full Stack real que actúa como una Pokédex interactiva para Entrenadores Pokémon, con capacidad para buscar, registrar, simular batallas y llevar un historial de todas tus acciones.
 
 ---
 
-## Diagramas de Casos de Uso
+## 🛠️ Tecnologías Usadas
+- **Frontend:** React.js, HTML5, CSS3 (Glassmorphism UI)
+- **Backend:** Node.js con Express
+- **Base de Datos:** SQLite (ligera y persistente)
+- **Datos externos:** Conexión con *PokeAPI*
 
-### 1. Caso de Uso: Buscar un Pokémon
-```mermaid
-usecaseDiagram
-    actor Usuario
-    usecase "Buscar Pokémon" as UC1
-    usecase "Filtrar resultados" as UC2
-    usecase "Ver lista vacía (si no hay)" as UC3
-    
-    Usuario --> UC1
-    UC1 ..> UC2 : include
-    UC1 ..> UC3 : extends
-```
+---
 
-### 2. Caso de Uso: Visualizar Información de la Biblioteca
-```mermaid
-usecaseDiagram
-    actor Usuario
-    usecase "Acceder a PokéDex" as UC1
-    usecase "Ver lista completa de Pokémon" as UC2
-    usecase "Ver imagen y nombre del Pokémon" as UC3
-    
-    Usuario --> UC1
-    UC1 --> UC2
-    UC2 ..> UC3 : include
+## 🌟 Funcionalidades Principales
+
+Nuestra App no es solo un gestor básico, incluye características avanzadas:
+1. **Inicio de sesión (Login):** Autenticación en base de datos almacenando la sesión en local.
+2. **Sistema CRUD Completo:** Creación y gestión de datos Pokémon.
+3. **Pokemon Tracker (Favoritos):** Funcionalidad interactiva estilo *Pokémon GO* para añadir a tus favoritos.
+4. **Arena de Entrenamiento (Batallas 🤖):** Sistema automatizado matemático donde los Pokémon pelean por turnos según sus estadísticas.
+5. **Historial de Entrenador:** La base de datos guarda automáticamente cada victoria, captura y entrenamiento.
+
+---
+
+## 📂 Organización de Carpetas
+```text
+pokedex/
+ ├─ backend/        # Servidor Node, lógica y base de datos (pokemon.db)
+ ├─ frontend/       # Pantallas, componentes en React y assets
+ ├─ java-version/   # (Opcional) Código portado a Java
+ ├─ docs/           # Documentos técnicos, PDFs y enunciado
+ └─ README.md       # Este archivo
 ```
 
 ---
 
-## Diagramas de Secuencia
+## 🚀 Cómo Ejecutar el Proyecto
 
-### 1. Inicialización de la Base de Datos y Caché
-```mermaid
-sequenceDiagram
-    participant Index as Server (Node.js)
-    participant DB as Base de Datos (SQLite)
-    participant PokeAPI as PokeAPI externa
-    
-    Index->>DB: Checkea si la BD está vacía
-    DB-->>Index: Retorna Count (0)
-    Index->>PokeAPI: GET /api/v2/pokemon (Extraer info básica)
-    PokeAPI-->>Index: Lista de Pokémon (JSON)
-    Index->>DB: INSERT INTO pokemon...
-    DB-->>Index: Datos guardados
-    Index-->>Index: Servidor listo en puerto 3001
-```
+Para probar este código en tu propio ordenador, abre dos ventanas de terminal:
 
-### 2. Búsqueda y Filtrado desde el Front-end
-```mermaid
-sequenceDiagram
-    actor Usuario
-    participant Front as React (App.jsx)
-    participant API as Backend (Node.js)
-    participant DB as SQLite
-    participant GithubAPI as PokeAPI (Imágenes)
-    
-    Usuario->>Front: Escribe "Pika" en buscador
-    Front->>API: GET /api/pokemon?search=Pika
-    API->>DB: SELECT * FROM pokemon WHERE name LIKE '%Pika%'
-    DB-->>API: Retorna filas (Pikachu)
-    API-->>Front: JSON [{id: 25, name: 'pikachu', url: '...'}]
-    Front->>GithubAPI: Pide imagen (oficial-artwork/25.png)
-    GithubAPI-->>Front: Imagen del Pokémon
-    Front-->>Usuario: Muestra la carta de Pikachu
-```
-
-## Instalación y Ejecución
-
-### 1. Cargar el backend
+**1. Levantar el Servidor (Backend)**
 ```bash
 cd backend
 npm install
 node server.js
 ```
+*(Se creará automáticamente el archivo `pokemon.db` en el puerto 4412).*
 
-### 2. Cargar el frontend
+**2. Levantar la Aplicación (Frontend)**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+*(La aplicación se abrirá en `http://localhost:5173` o el puerto que te indique Vite).*
+
+---
+> Proyecto desarrollado por **Sergio**. Creado y mantenido como Portfolio y proyecto educativo.

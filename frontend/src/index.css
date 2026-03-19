@@ -238,3 +238,83 @@ h1, h2, h3, h4, h5, h6 {
   50% { opacity: 1; }
   100% { opacity: 0.6; }
 }
+
+/* ==========================================
+   🔥 5 y 6. ESTADÍSTICAS Y ANIMACIONES PRO
+   ========================================== */
+
+.btn-magico {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  font-weight: bold;
+}
+
+.btn-magico:active {
+  transform: scale(0.95);
+  background-color: var(--accent-hover);
+}
+
+.pokemon-stats-box {
+  margin-top: 15px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.stat-barra-fondo {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  height: 8px;
+  margin-bottom: 8px;
+  margin-top: 2px;
+  overflow: hidden;
+}
+
+.stat-barra-color {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 1s ease-in-out;
+}
+
+.stat-barra-color.hp { background-color: #4ade80; } 
+.stat-barra-color.ataque { background-color: #ef4444; }
+.stat-barra-color.defensa { background-color: #3b82f6; }
+
+@keyframes capturandoKeyframe {
+  0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+  50%  { transform: scale(0.6) rotate(180deg); filter: brightness(2) contrast(2); }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+.pokemon-capturado {
+  animation: capturandoKeyframe 0.8s forwards ease-in;
+}
+
+.login-card-inline {
+  display: flex;
+  gap: 10px;
+  background: var(--card-bg);
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  align-items: center;
+}
+
+.login-card-inline input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  background: rgba(15, 23, 42, 0.6);
+  color: white;
+  outline: none;
+}
+
+.login-card-inline input:focus {
+  border-color: var(--accent-color);
+}
+

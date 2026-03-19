@@ -126,11 +126,21 @@ const PokemonCard = ({ pokemon, onToggleFavorite, onClick }) => {
         )}
       </div>
       
-      <div className="stats">
-        <div><strong>❤️ HP:</strong> {pokemon.hp || '—'}</div>
-        <div><strong>⚔️ ATK:</strong> {pokemon.ataque}</div>
-        <div><strong>🛡️ DEF:</strong> {pokemon.defensa}</div>
-        <div><strong>💨 SPD:</strong> {pokemon.velocidad}</div>
+      <div className="pokemon-stats-box">
+         <small>HP ({pokemon.hp || 50})</small>
+         <div className="stat-barra-fondo">
+            <div className="stat-barra-color hp" style={{ width: `${((pokemon.hp || 50) / 150) * 100}%` }}></div>
+         </div>
+         
+         <small>Ataque ({pokemon.ataque || 50})</small>
+         <div className="stat-barra-fondo">
+            <div className="stat-barra-color ataque" style={{ width: `${((pokemon.ataque || 50) / 150) * 100}%` }}></div>
+         </div>
+
+         <small>Defensa ({pokemon.defensa || 50})</small>
+         <div className="stat-barra-fondo">
+            <div className="stat-barra-color defensa" style={{ width: `${((pokemon.defensa || 50) / 150) * 100}%` }}></div>
+         </div>
       </div>
     </div>
   );

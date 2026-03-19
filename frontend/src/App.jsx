@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PokemonCard from './components/PokemonCard';
 import MiniMapFavorites from './components/MiniMapFavorites';
-import LoginGoogle from './components/LoginGoogle';
+import LoginSencillo from './components/LoginSencillo';
 import BattleArena from './components/BattleArena';
 import BattleHistory from './components/BattleHistory';
 import Leaderboard from './components/Leaderboard';
@@ -109,7 +109,7 @@ function App() {
       {/* Header */}
       <header className="app-header">
         <h1 className="main-title">Pokédex Ultimate</h1>
-        <LoginGoogle onLogin={setUser} onLogout={() => setUser(null)} />
+        <LoginSencillo onLogin={setUser} onLogout={() => setUser(null)} />
       </header>
 
       {/* Navigation Tabs */}

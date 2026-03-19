@@ -174,12 +174,25 @@ async function initDB() {
         nombre TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
         foto TEXT DEFAULT '',
+        password TEXT DEFAULT '1234',
         fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
         nivel_entrenador INTEGER DEFAULT 1,
         victorias INTEGER DEFAULT 0,
         derrotas INTEGER DEFAULT 0,
         insignias TEXT DEFAULT '[]',
         racha_actual INTEGER DEFAULT 0
+      )
+    `);
+
+    // Intentamos añadir la columna password por si la tabla ya existía
+    try { await runQuery(db, 'ALTER TABLE usuarios ADD COLUMN password TEXT DEFAULT "1234"'); } catch (e) {}
+
+    await runQuery(db, `
+      CREATE TABLE IF NOT EXISTS historial (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        accion TEXT NOT NULL,
+        fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+        usuario_email TEXT NOT NULL
       )
     `);
 
@@ -357,6 +370,98 @@ app.post('/api/battles', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Error guardando batalla' });
+  } finally {
+    db.close();
+  }
+});
+
+// ==========================================
+// 🔥 BONUS PRO: FUNCIONALIDADES AVANZADAS
+// ==========================================
+
+app.post('/api/login', async (req, res) => {
+  const db = getDb();
+  try {
+    const { email, password } = req.body;
+    const [rows] = await runQuery(db, 'SELECT * FROM usuarios WHERE email = ? AND password = ?', [email, password]);
+    if (rows.length > 0) {
+      res.json({ success: true, user: { id: rows[0].id, nombre: rows[0].nombre, email: rows[0].email, foto: rows[0].foto } });
+    } else {
+      res.status(401).json({ success: false, error: 'Email o contraseña incorrectos' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error del servidor' });
+  } finally {
+    db.close();
+  }
+});
+
+app.post('/api/batalla_simulada', (req, res) => {
+  const { pokemon1, pokemon2 } = req.body;
+  
+  let hp1 = pokemon1.hp || 100;
+  let hp2 = pokemon2.hp || 100;
+  let log = [];
+
+  log.push(`¡La batalla comienza entre ${pokemon1.nombre} y ${pokemon2.nombre}!`);
+
+  while (hp1 > 0 && hp2 > 0) {
+    let damage1 = Math.max(1, Math.floor((pokemon1.ataque || 50) - (pokemon2.defensa || 50) / 2));
+    hp2 -= damage1;
+    log.push(`💥 ${pokemon1.nombre} ataca y hace ${damage1} de daño al rival.`);
+    if (hp2 <= 0) break;
+
+    let damage2 = Math.max(1, Math.floor((pokemon2.ataque || 50) - (pokemon1.defensa || 50) / 2));
+    hp1 -= damage2;
+    log.push(`⚡ ${pokemon2.nombre} contraataca y hace ${damage2} de daño.`);
+  }
+
+  const ganador = hp1 > 0 ? pokemon1.nombre : pokemon2.nombre;
+  log.push(`🔥 ¡El ganador es ${ganador}!`);
+
+  res.json({ ganador, log });
+});
+
+app.get('/api/buscar-avanzado', async (req, res) => {
+  const db = getDb();
+  try {
+    const { nombre, tipo, nivel_minimo } = req.query;
+    let query = 'SELECT * FROM pokemon WHERE 1=1';
+    let params = [];
+
+    if (nombre) { query += ' AND name LIKE ?'; params.push(`%${nombre}%`); }
+    if (tipo) { query += ' AND tipo_principal = ?'; params.push(tipo); }
+    if (nivel_minimo) { query += ' AND hp >= ?'; params.push(parseInt(nivel_minimo)); }
+
+    const [rows] = await runQuery(db, query, params);
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error en la búsqueda' });
+  } finally {
+    db.close();
+  }
+});
+
+app.get('/api/historial', async (req, res) => {
+  const db = getDb();
+  try {
+    const [rows] = await runQuery(db, 'SELECT * FROM historial ORDER BY fecha DESC LIMIT 50');
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener historial' });
+  } finally {
+    db.close();
+  }
+});
+
+app.post('/api/historial', async (req, res) => {
+  const db = getDb();
+  try {
+    const { accion, usuario_email } = req.body;
+    await runQuery(db, 'INSERT INTO historial (accion, usuario_email) VALUES (?, ?)', [accion, usuario_email]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al guardar acción' });
   } finally {
     db.close();
   }
